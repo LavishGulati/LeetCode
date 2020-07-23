@@ -1,31 +1,70 @@
 class Solution {
 public:
-    string longestPalindrome(string s) {
-        string out = "";
+    string LPS(string &s){
         int n = s.length();
-        for(int i = 0; i < n; i++){
-            int j = 0;
-            while(i-j >= 0 && i+j < n && s[i-j] == s[i+j]){
-                j++;
+        if(n == 0){
+            return "";
+        }
+
+        n = 2*n+1;
+        int *lps = new int[n];
+
+        lps[0] = 0;
+        lps[1] = 1;
+        int c = 1, r = 2, i = 0, iMirror, expand = -1, diff = -1, maxLPSlength = 1;
+        int maxLPScenterPosn = 1, start = -1, end = -1;
+        for(i = 2; i < n; i++){
+            iMirror = 2*c-i;
+            expand = 0;
+            diff = r-i;
+            if(diff >= 0){
+                if(lps[iMirror] < diff){
+                    lps[i] = lps[iMirror];
+                }
+                else if(lps[iMirror] == diff && r == n-1){
+                    lps[i] = lps[iMirror];
+                }
+                else if(lps[iMirror] == diff && r < n-1){
+                    lps[i] = lps[iMirror];
+                    expand = 1;
+                }
+                else if(lps[iMirror] > diff){
+                    lps[i] = diff;
+                    expand = 1;
+                }
             }
-            j--;
-            if(2*j+1 > out.length()){
-                out = s.substr(i-j, 2*j+1);
+            else{
+                lps[i] = 0;
+                expand = 1;
+            }
+
+            if(expand == 1){
+                while(i+lps[i] < n && i-lps[i] > 0 && ((i+lps[i]+1)%2 == 0 || s[(i+lps[i]+1)/2] == s[(i-lps[i]-1)/2])){
+                    lps[i]++;
+                }
+            }
+
+            if(lps[i] > maxLPSlength){
+                maxLPSlength = lps[i];
+                maxLPScenterPosn = i;
+            }
+
+            if(i+lps[i] > r){
+                c = i;
+                r = i+lps[i];
             }
         }
-        
-        for(int i = 0; i < n-1; i++){
-            if(s[i] == s[i+1]){
-                int j = 1;
-                while(i-j >= 0 && i+1+j < n && s[i-j] == s[i+1+j]){
-                    j++;
-                }
-                j--;
-                if(2*j+2 > out.length()){
-                    out = s.substr(i-j, 2*j+2);
-                }
-            }
+
+        start = (maxLPScenterPosn-maxLPSlength)/2;
+        end = (start+maxLPSlength-1);
+        string output = "";
+        for(i = start; i <= end; i++){
+            output += s[i];
         }
-        return out;
+        return output;
+    }
+
+    string longestPalindrome(string s) {
+        return LPS(s);
     }
 };

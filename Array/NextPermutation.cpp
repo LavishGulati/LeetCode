@@ -1,31 +1,34 @@
-#define all(x) x.begin(), x.end()
-
 class Solution {
 public:
     void nextPermutation(vector<int>& nums) {
         int n = nums.size();
-        int i = n-2;
+        int i = n-2, j, id, x;
         while(i >= 0 && nums[i] >= nums[i+1]){
             i--;
         }
-        
+
         if(i < 0){
-            sort(all(nums));
-            return;
-        }
-        
-        int j = n-1;
-        int id = -1;
-        int big = -1;
-        while(j > i){
-            if(nums[j] > nums[i] && (nums[j] < big || big == -1)){
-                big = nums[j];
-                id = j;
+            j = n-1, i = 0;
+            while(i < j){
+                swap(nums[i], nums[j]);
+                i++; j--;
             }
-            j--;
         }
-        
-        swap(nums[i], nums[id]);
-        sort(nums.begin()+i+1, nums.end());
+        else{
+            id = n-2, x = INT_MAX;
+            for(int j = n-1; j > i; j--){
+                if(nums[j] > nums[i] && x > nums[j]){
+                    x = nums[j];
+                    id = j;
+                }
+            }
+
+            swap(nums[id], nums[i]);
+            j = n-1, id = i+1;
+            while(id < j){
+                swap(nums[id], nums[j]);
+                id++; j--;
+            }
+        }
     }
 };

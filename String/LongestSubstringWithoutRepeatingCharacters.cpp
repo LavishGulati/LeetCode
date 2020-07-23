@@ -1,10 +1,12 @@
+#define uset unordered_set
+
 class Solution {
 public:
     int lengthOfLongestSubstring(string s) {
         int i = 0, j = 0, n = s.length();
         int ans = 0;
-        set<char> present;
-        
+        uset<char> present;
+
         while(j < n){
             if(present.find(s[j]) == present.end()){
                 present.insert(s[j]);

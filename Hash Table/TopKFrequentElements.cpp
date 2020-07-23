@@ -7,8 +7,16 @@ typedef pair<int, int> pii;
 class Solution {
 public:
     vector<int> topKFrequent(vector<int>& nums, int k) {
-        unordered_map<int, int> freq;
         int n = nums.size();
+        if(k == n){
+            vector<int> output;
+            for(int i = 0; i < n; i++){
+                output.pb(nums[i]);
+            }
+            return output;
+        }
+
+        unordered_map<int, int> freq;
         for(int i = 0; i < n; i++){
             freq[nums[i]]++;
         }
