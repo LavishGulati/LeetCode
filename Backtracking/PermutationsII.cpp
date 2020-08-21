@@ -1,0 +1,40 @@
+#define all(x) x.begin(), x.end()
+#define pb push_back
+
+class Solution {
+public:
+    set<vector<int>> output;
+
+    void permute(vector<int> &nums, vector<int> &help, bool *taken){
+        if(help.size() == nums.size()){
+            output.insert(help);
+            return;
+        }
+
+        for(int i = 0; i < nums.size(); i++){
+            if(!taken[i]){
+                taken[i] = true;
+                help.pb(nums[i]);
+                permute(nums, help, taken);
+                taken[i] = false;
+                help.pop_back();
+            }
+        }
+    }
+
+    vector<vector<int>> permuteUnique(vector<int>& nums) {
+        vector<int> help;
+        output.clear();
+        bool *taken = new bool[nums.size()];
+        for(int i = 0; i < nums.size(); i++){
+            taken[i] = false;
+        }
+        permute(nums, help, taken);
+
+        vector<vector<int> > ans;
+        for(auto v : output){
+            ans.pb(v);
+        }
+        return ans;
+    }
+};
